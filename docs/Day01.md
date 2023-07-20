@@ -61,13 +61,13 @@
 
 
 
-# 2.4 功能架构
+## 2.4 功能架构
 
 ![image-20230720001253125](images/image-20230720001253125.png)
 
 
 
-# 2.5 角色
+## 2.5 角色
 
 - 后台系统**管理员**:登录后台管理系统，拥有后台系统中的所有操作权限
 
@@ -77,6 +77,50 @@
 
 
 # 三、开发环境搭建
+
+## 3.1 创建mysql数据库
+
+利用**navicat**软件创建**reggie**数据库，
+
+![image-20230720203942011](images/image-20230720203942011.png)
+
+或者直接在mysql软件提供的**MySQL 8.0 Command Line Client - Unicode**命名界面里利用sql语句来创建
+
+```
+CREATE DATABASE `reggie` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci';
+```
+
+
+
+## 3.2 导入表结构和数据
+
+运行项目的[sql文件](../sql/)，导入表结构和数据
+
+![image-20230720205214930](images/image-20230720205214930.png)
+
+在数据库中，不同表的具体含义如下：
+
+| 序号 | 表名          | 说明             |
+| ---- | ------------- | ---------------- |
+| 1    | employee      | 员工表           |
+| 2    | category      | 菜品和套餐分类表 |
+| 3    | dish          | 菜品表           |
+| 4    | setmeal       | 套餐表           |
+| 5    | setmeal_dish  | 套餐菜品关系表   |
+| 6    | dish_flaver   | 菜品口味关系表   |
+| 7    | user          | 用户表(C端）     |
+| 8    | address_book  | 地址薄表         |
+| 9    | shopping_cart | 购物车表         |
+| 10   | orders        | 订单表           |
+| 11   | order_detail  | 订单明细表       |
+
+
+
+## 3.3 创建maven项目
+
+在InteliJ软件里，创建`reggie_take_out`项目
+
+![image-20230720213653956](images/image-20230720213653956.png)
 
 
 
