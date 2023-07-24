@@ -124,9 +124,52 @@ CREATE DATABASE `reggie` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci';
 
 
 
+## 3.4 导入项目配置文件
+
+直接从项目里面复制 **pom.xml** 和 **application.yml** 即可
+
+
+
+## 3.5 设置SpringBoot启动类
+
+创建ReggieApplication 文件，设置启动类
+
+```
+@Slf4j
+@SpringBootApplication
+public class ReggieApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(ReggieApplication.class, args);
+        log.info("项目启动成功！！！");
+    }
+}
+```
+
+
+
+## 3.6 设置静态资源
+
+将前端资源（**backend**和**front**）直接放在`resourece`目录下。由于静态资源没有放在`template`或者 `static`目录下，必须配置静态资源映射。
+
+> 注意的是，如果设置了静态资源映射，原本默认的`template`或者 `static`目录可能会失效
+
 
 
 # 四、后台系统登录功能实现
 
+登录页面为：`reggie_take_out/src/main/resources/backend/page/login/login.html`
 
+## 4.1 需求分析
+
+通过浏览器调试工具(F12)，可以发现，点击登录按钮时，页面会发送请求（请求地址为http://localhost:8080/employee/login）并提交参数(username和password )
+
+![image-20230724213909860](images/image-20230724213909860.png)
+
+![image-20230724214002119](images/image-20230724214002119.png)
+
+此时报404，是因为我们的后台系统还没有响应此请求的处理器，所以我们需要创建相关类来处理登录请求
+
+![image-20230724213430439](images/image-20230724213430439.png)
+
+> 具体代码分析查看视频
 
