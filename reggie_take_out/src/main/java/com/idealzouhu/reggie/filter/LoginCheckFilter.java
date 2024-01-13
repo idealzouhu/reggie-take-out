@@ -1,6 +1,7 @@
 package com.idealzouhu.reggie.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.idealzouhu.reggie.common.BaseContext;
 import com.idealzouhu.reggie.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
@@ -43,7 +44,7 @@ public class LoginCheckFilter implements Filter {
 
         // 1. 获取本次请求的URI
         String requestURI = request.getRequestURI();
-        log.info("拦截到请求： {}",request.getRequestURI());
+//        log.info("拦截到请求： {}",request.getRequestURI());
 
         // 2. 判断本次请求是否需要处理
         String[] urls = new String[]{        // 定义不需要处理的请求路径;
@@ -56,14 +57,16 @@ public class LoginCheckFilter implements Filter {
 
         // 3. 如果不需要处理，则直接放行
         if(check){
-            log.info("本次请求  {} 不需要处理",request.getRequestURI());
+//            log.info("本次请求  {} 不需要处理",request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }
 
         // 4. 判断登录状态，如果已登录，则直接放行
         if(request.getSession().getAttribute("employee") != null){
-            log.info("用户已登录，id为: {} ",request.getSession().getAttribute("employee"));
+            // log.info("用户已登录，id为: {} ",request.getSession().getAttribute("employee"));
+            // log.info("线程id: {}" , Thread.currentThread().getId()) ;
+            BaseContext.setCurrentId((Long) request.getSession().getAttribute("employee"));  // 保存用户id到ThreadLocal里
             filterChain.doFilter(request, response);
             return;
         }

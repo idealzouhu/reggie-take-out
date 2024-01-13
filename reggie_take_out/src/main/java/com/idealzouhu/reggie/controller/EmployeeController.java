@@ -84,14 +84,13 @@ public class EmployeeController {
         // 设置初始密码 123456， 需要进行MD5 加密处理
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
 
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-
-        // 获得当前登录用户的id
-        log.info("新增员工，当前登录员工id为: {} ",request.getSession().getAttribute("employee"));
-        Long empID = (Long) request.getSession().getAttribute("employee");
-        employee.setCreateUser(empID);
-        employee.setUpdateUser(empID);
+        // 以下注释代码用 公共字段填充 所取代
+        // employee.setCreateTime(LocalDateTime.now());
+        // employee.setUpdateTime(LocalDateTime.now());
+        // log.info("新增员工，当前登录员工id为: {} ",request.getSession().getAttribute("employee"));
+        // Long empID = (Long) request.getSession().getAttribute("employee"); // 获得当前登录用户的id
+        // employee.setCreateUser(empID);
+        // employee.setUpdateUser(empID);
 
         employeeService.save(employee);
 
@@ -99,17 +98,18 @@ public class EmployeeController {
     }
 
     /**
-     * 根据id 编辑员工 （事实上，这段代码与下面的功能”启用/禁用员工“一样）
+     * 根据id 编辑员工 （事实上，这段代码与下面的功能”启用/禁用员工“一样, 都是 update 操作）
      * @param employee
      * @return
      */
     @PutMapping("/editEmployee")
     public R<String> editEmployee(HttpServletRequest request, @RequestBody Employee employee){
         log.info(employee.toString());
+        // log.info("线程id: {}" , Thread.currentThread().getId()) ;
 
-        Long empID = (Long)request.getSession().getAttribute("employee");
-        employee.setUpdateUser(empID);
-        employee.setUpdateTime(LocalDateTime.now());
+        // Long empID = (Long)request.getSession().getAttribute("employee");
+        // employee.setUpdateUser(empID);
+        // employee.setUpdateTime(LocalDateTime.now());
         employeeService.updateById(employee);
 
         return R.success("员工信息修改成功");
@@ -150,9 +150,9 @@ public class EmployeeController {
     public R<String> enableOrDisableEmployee(HttpServletRequest request, @RequestBody Employee employee){
         log.info(employee.toString());
 
-        Long empID = (Long)request.getSession().getAttribute("employee");
-        employee.setUpdateUser(empID);
-        employee.setUpdateTime(LocalDateTime.now());
+        // Long empID = (Long)request.getSession().getAttribute("employee");
+        // employee.setUpdateUser(empID);
+        // employee.setUpdateTime(LocalDateTime.now());
         employeeService.updateById(employee);
 
         return R.success("员工信息修改(启用/禁用员工)成功");
