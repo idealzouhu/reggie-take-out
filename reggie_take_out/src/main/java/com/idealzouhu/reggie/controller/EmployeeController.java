@@ -1,18 +1,20 @@
 package com.idealzouhu.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.idealzouhu.reggie.common.R;
 import com.idealzouhu.reggie.entity.Employee;
 import com.idealzouhu.reggie.service.EmployeeService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 
+@Slf4j
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
@@ -64,8 +66,110 @@ public class EmployeeController {
      */
     @PostMapping("/logout")
     public R<String> logout(HttpServletRequest request){
-        // 清楚Session中的 保存的当前登录员工的id
+        // 清除 session 中的 保存的当前登录员工的id
+        log.info("员工退出登录");
         request.getSession().removeAttribute("employee");
         return R.success("退出成功");
+    }
+
+    /**
+     * 新增员工
+     * @param employee
+     * @return
+     */
+    @PostMapping("/addEmployee")
+    public R<String> addEmployee(HttpServletRequest request, @RequestBody Employee employee){
+        log.info("新增员工， 员工信息：{}", employee.toString());
+
+        // 设置初始密码 123456， 需要进行MD5 加密处理
+        employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
+
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+
+        // 获得当前登录用户的id
+        log.info("新增员工，当前登录员工id为: {} ",request.getSession().getAttribute("employee"));
+        Long empID = (Long) request.getSession().getAttribute("employee");
+        employee.setCreateUser(empID);
+        employee.setUpdateUser(empID);
+
+        employeeService.save(employee);
+
+        return R.success("新增员工成功");
+    }
+
+    /**
+     * 根据id 编辑员工 （事实上，这段代码与下面的功能”启用/禁用员工“一样）
+     * @param employee
+     * @return
+     */
+    @PutMapping("/editEmployee")
+    public R<String> editEmployee(HttpServletRequest request, @RequestBody Employee employee){
+        log.info(employee.toString());
+
+        Long empID = (Long)request.getSession().getAttribute("employee");
+        employee.setUpdateUser(empID);
+        employee.setUpdateTime(LocalDateTime.now());
+        employeeService.updateById(employee);
+
+        return R.success("员工信息修改成功");
+    }
+
+
+    /**
+     * 员工信息分页查询
+     * @param page
+     * @param pageSize
+     * @param name  按条件分页查询里面的条件
+     * @return
+     */
+    @GetMapping("/page")
+    public R<Page> page(int page, int pageSize, String name){
+        log.info("page = {}, pageSize = {}, name={} ", page, pageSize,name);
+
+        // 1. 构造分页查询器
+        Page pageInfo = new Page(page, pageSize);
+
+        // 2. 构造条件构造器
+        LambdaQueryWrapper<Employee> lambdaQueryWrapper = new LambdaQueryWrapper();
+        lambdaQueryWrapper.like(StringUtils.isNotEmpty(name), Employee::getName, name); // 添加过滤条件
+        lambdaQueryWrapper.orderByDesc(Employee::getUpdateTime);  // 添加排序条件
+
+        // 3.执行查询
+        employeeService.page(pageInfo, lambdaQueryWrapper);
+
+        return R.success(pageInfo);
+    }
+
+    /**
+     * 根据 id 修改员工信息, 即 启用/禁用 员工
+     * @param employee
+     * @return
+     */
+    @PutMapping("/enableOrDisableEmployee")
+    public R<String> enableOrDisableEmployee(HttpServletRequest request, @RequestBody Employee employee){
+        log.info(employee.toString());
+
+        Long empID = (Long)request.getSession().getAttribute("employee");
+        employee.setUpdateUser(empID);
+        employee.setUpdateTime(LocalDateTime.now());
+        employeeService.updateById(employee);
+
+        return R.success("员工信息修改(启用/禁用员工)成功");
+    }
+
+    /**
+     * 根据员工 id 查询信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public R<Employee> getById(@PathVariable Long id){
+        log.info("根据员工id（{}）查询信息：", id);
+        Employee employee = employeeService.getById(id);
+        if(employee != null){
+            return R.success(employee);
+        }
+        return R.error("没有查询到对应员工信息");
     }
 }

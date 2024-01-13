@@ -92,7 +92,7 @@
       </el-table>
       <el-pagination
         class="pageList"
-        :page-sizes="[10, 20, 30, 40]"
+        :page-sizes="[2, 10, 20, 30]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="counts"
@@ -117,8 +117,8 @@
           return {
              input: '',
              counts: 0,
-             page: 1,
-             pageSize: 10,
+             page: 1,         // 分页查询的默认值
+             pageSize: 2,
              tableData : [],
              id : '',
              status : '',
@@ -127,6 +127,7 @@
         computed: {},
         created() {
           this.init()
+          // 获取当前登录员工的账号，并赋值给模型数据
           this.user = JSON.parse(localStorage.getItem('userInfo')).username
         },
         mounted() {
@@ -169,6 +170,8 @@
           },
           //状态修改
           statusHandle (row) {
+            // alert(this.id)
+            // alert(this.status)
             this.id = row.id
             this.status = row.status
             this.$confirm('确认调整该账号的状态?', '提示', {

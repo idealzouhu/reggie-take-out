@@ -42,3 +42,15 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 ```
 
 有个问题，我实际上调用的是 EmployeeService， 为什么还跟 EmployeeServiceImpl 类 有关系
+
+
+
+## 奇怪的前端页面跳转
+
+问题：如果控制器里面的某个方法， 最后返回的是 null 的话。那么最后 页面会跳转到登录页面，并且会删除session里面的员工登录信息。
+
+
+
+BUG原因：
+
+`src/main/java/com/idealzouhu/reggie/filter/LoginCheckFilter.java`里面的方法没有实现号。注意，官方视频在这里少打了一个 return ，导致登录用户存放在session里面会被删掉（即误执行`response.getWriter().write(JSON.toJSONString(R.error("NOTLOGIN")))` ，间接执行前端代码`localStorage.removeItem('userInfo')` ）。
