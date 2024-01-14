@@ -11,6 +11,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/category")
@@ -53,6 +55,24 @@ public class CategoryController {
         log.info("修改分类信息：{}", category);
         categoryService.updateById(category);
         return R.success("成功修改分类信息 !");
+    }
+
+    /**
+     * 根据条件查询分类数据 （新增菜品时会用到该功能）
+     * @param category
+     * @return
+     */
+    @GetMapping("/list")
+    public R<List<Category>> list(Category category){
+
+        LambdaQueryWrapper<Category> lambdaQueryWrapper = new LambdaQueryWrapper();
+        lambdaQueryWrapper.eq(category.getType() != null, Category::getType, category.getType()); // 添加过滤条件
+        lambdaQueryWrapper.orderByAsc(Category::getSort);  // 添加排序条件
+
+        // 3.执行查询
+       List<Category> list = categoryService.list(lambdaQueryWrapper);
+
+        return R.success(list);
     }
 
     /**

@@ -256,8 +256,18 @@ const addCategory = (params) => {
 
 在 `src/main/java/com/idealzouhu/reggie/controller/CategoryController.java`里，添加代码
 
-```
-
+```java
+ 	/**
+     * 新增分类（菜品分类 或者 套餐分类）
+     * @param category
+     * @return
+     */
+    @PostMapping("/addCategory")
+    public R<String> save(@RequestBody Category category){
+        log.info("category: {}", category.toString());
+        categoryService.save(category);
+        return R.success("新增分类成功");
+    }
 ```
 
 

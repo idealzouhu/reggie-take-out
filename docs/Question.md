@@ -8,11 +8,34 @@ MP分页查询知识点
 
 
 
+
+
+我们可以在 MP的函数里面自动添加自己想要的方法。
+
+多表查询的方法 写在 Service 里面。
+
+
+
 ```
 categoryService.removeById(category);
 ```
 
 这个是什么情况？
+
+
+
+
+
+application.yml 里面的规则是什么？可以随便创建变量，然后嗲用
+
+```
+reggie:
+  path: D:\
+  
+
+ @Value("${reggie.path}")  // 获取 application.yml 里面的 reggie.path
+    private String basePath;
+```
 
 
 
@@ -53,6 +76,10 @@ public R<Employee> getById(@PathVariable Long id){
 [基于注解的URL映射_w3cschool](https://www.w3cschool.cn/javaweb/h1ym1mt8.html)
 
 [JSON_Java Web_w3cschool](https://www.w3cschool.cn/javaweb/86io1mtb.html)
+
+
+
+然后，还有 DTO
 
 
 

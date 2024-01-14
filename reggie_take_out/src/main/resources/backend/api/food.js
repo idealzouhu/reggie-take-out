@@ -19,7 +19,7 @@ const deleteDish = (ids) => {
 // 修改接口
 const editDish = (params) => {
   return $axios({
-    url: '/dish',
+    url: '/dish/editDish',
     method: 'put',
     data: { ...params }
   })
@@ -28,7 +28,7 @@ const editDish = (params) => {
 // 新增接口
 const addDish = (params) => {
   return $axios({
-    url: '/dish',
+    url: '/dish/addDish',
     method: 'post',
     data: { ...params }
   })
@@ -66,7 +66,7 @@ const commonDownload = (params) => {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
     },
-    url: '/common/download',
+    url: '/file/download',
     method: 'get',
     params
   })
