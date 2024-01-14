@@ -60,6 +60,24 @@ public class DishController {
     }
 
     /**
+     * 根据条件查询对应的菜品数据
+     * @param dish
+     * @return
+     */
+    @GetMapping("/list")
+    public R<List<Dish>> list(Dish dish){
+
+        // 根据菜品分类 CategoryId 查询符合的菜品数据集合
+        LambdaQueryWrapper<Dish> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
+        lambdaQueryWrapper.eq(Dish::getStatus, 1);  // 只显示启售状态的菜品
+        lambdaQueryWrapper.orderByAsc(Dish::getSort).orderByAsc(Dish::getUpdateTime);
+        List<Dish> list = dishService.list(lambdaQueryWrapper);
+
+        return R.success(list);
+    }
+
+    /**
      * 根据 id 查看菜品信息
      * @param id
      * @return
@@ -94,7 +112,7 @@ public class DishController {
         // 3.执行分析查询
         dishService.page(pageInfo, lambdaQueryWrapper);
 
-        // 对象拷贝（查询信息除了 Dish 对象还包括其他信息）
+        // 4. 对象拷贝（查询信息除了 Dish 对象还包括其他信息）
         BeanUtils.copyProperties(pageInfo, dishDtoPage, "records");  // 复制除了 records 以外的所有信息
 
         List<Dish> records = pageInfo.getRecords();
