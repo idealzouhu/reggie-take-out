@@ -1,5 +1,17 @@
 
 
+基本语法：
+
+extends  和 implents
+
+
+
+MP 的实现逻辑
+
+
+
+
+
 [Spring与依赖注入_w3cschool](https://www.w3cschool.cn/javaweb/2yr91msw.html)
 
 
@@ -79,7 +91,29 @@ public R<Employee> getById(@PathVariable Long id){
 
 
 
-然后，还有 DTO
+
+
+前端传过来的参数，跟实体类不符合时，解决方法有
+
+- Map 类
+
+然后，还有 DTO，
+
+
+
+
+
+怎么将路径里面的参数解析成 对象
+
+```
+ public R<List<Setmeal>> list(Setmeal setmeal){
+ 
+ }
+```
+
+
+
+
 
 
 
